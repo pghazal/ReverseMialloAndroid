@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 1000);
     }
 
     public boolean validate() {
@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setEnabled(true);
 
+        setResult(RESULT_OK);
         finish();
     }
 
