@@ -4,9 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.adapter.FriendAdapter;
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link ListFragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link FriendsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
@@ -59,6 +63,8 @@ public class FriendsFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -79,13 +85,6 @@ public class FriendsFragment extends ListFragment {
         fillFriendListTest();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed() {
-        if (mListener != null) {
-            mListener.onFragmentInteraction();
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -103,13 +102,24 @@ public class FriendsFragment extends ListFragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_fragment_friends, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_friend:
+                mListener.onAddFriendInteraction();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onAddFriendInteraction();
     }
 }

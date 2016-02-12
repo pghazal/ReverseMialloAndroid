@@ -98,13 +98,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.action_logout) {
-            logout();
-
-            return true;
-        }
+//        int id = item.getItemId();
+//
+//        if (id == R.id.action_logout) {
+//            logout();
+//
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -132,7 +132,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onFragmentInteraction() {
-        Log.d(TAG, "# onFragmentInteraction");
+    public void onAddFriendInteraction() {
+        Log.d(TAG, "# onAddFriendInteraction");
+    }
+
+    @Override
+    public void onLogoutInteraction() {
+        Log.d(TAG, "# onLogoutInteraction");
+
+        logout();
     }
 }
