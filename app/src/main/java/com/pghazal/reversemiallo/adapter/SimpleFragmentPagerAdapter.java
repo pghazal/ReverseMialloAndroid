@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
+import com.pghazal.reversemiallo.fragment.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
         fragmentList = new ArrayList<>();
         fragmentList.add(FriendsFragment.newInstance());
-        fragmentList.add(FriendsFragment.newInstance());
+        fragmentList.add(SettingsFragment.newInstance());
     }
 
     @Override

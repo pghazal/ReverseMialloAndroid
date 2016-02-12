@@ -12,10 +12,17 @@ import android.view.MenuItem;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.adapter.SimpleFragmentPagerAdapter;
+import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
+import com.pghazal.reversemiallo.fragment.SettingsFragment;
 import com.pghazal.reversemiallo.utility.SessionManager;
 
-public class MainActivity extends AppCompatActivity implements FriendsFragment.OnFragmentInteractionListener {
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements
+        FriendsFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
     private static final String TAB_POSITION = "TAB_POSITION";
@@ -33,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements FriendsFragment.O
         if (!SessionManager.isLoggedIn(this)) {
             showLoginActivity();
         } else {
-            // We're already logged in, stay here
+            // We're already logged in, stay here and setup views
             setupActionBar();
         }
     }
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements FriendsFragment.O
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "# onActivityResult");
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_LOGIN:
                     setupActionBar();

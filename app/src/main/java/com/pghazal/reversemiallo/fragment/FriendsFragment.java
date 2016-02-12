@@ -1,14 +1,19 @@
 package com.pghazal.reversemiallo.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.adapter.FriendAdapter;
+import com.pghazal.reversemiallo.entity.Friend;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,9 +23,22 @@ import com.pghazal.reversemiallo.R;
  * Use the {@link FriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private ListView mListView;
+    private FriendAdapter mAdapter;
+
+    // TODO: delete when not needed anymore
+    private void fillFriendListTest() {
+        List<Friend> friendList = new ArrayList<>();
+        friendList.add(new Friend("Miallo", "miallo@test.com"));
+        friendList.add(new Friend("Azerty", "azerty@test.com"));
+        friendList.add(new Friend("Foo", "foo@test.com"));
+
+        mAdapter.updateAdapterData(friendList);
+    }
 
     public FriendsFragment() {
     }
@@ -47,12 +65,22 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
-
         return view;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mListView = getListView();
+        mAdapter = new FriendAdapter(getActivity(), R.layout.adapter_friend);
+        mListView.setAdapter(mAdapter);
+
+        fillFriendListTest();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed() {
         if (mListener != null) {
             mListener.onFragmentInteraction();
         }
