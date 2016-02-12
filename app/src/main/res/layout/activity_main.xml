@@ -11,13 +11,18 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="fixed" />
+        android:background="@color/primary"
+        app:tabBackground="@color/primary_dark"
+        app:tabIndicatorColor="@color/primary_darker"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/gray_light" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:background="@android:color/white" />
+        android:background="@color/primary" />
 
 </LinearLayout>

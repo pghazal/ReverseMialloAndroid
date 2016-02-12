@@ -5,4 +5,5 @@
 
     <dimen name="adapter_vertical_margin">4dp</dimen>
     <dimen name="adapter_horizontal_margin">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

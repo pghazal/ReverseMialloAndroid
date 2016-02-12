@@ -112,7 +112,8 @@ public class FriendsFragment extends ListFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_friend:
-                mListener.onAddFriendInteraction();
+                if (mListener != null)
+                    mListener.onAddFriendInteraction();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
