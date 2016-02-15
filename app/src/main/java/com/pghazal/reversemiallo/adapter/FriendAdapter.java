@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.client.request.RequestManager;
 import com.pghazal.reversemiallo.client.response.FriendResponse;
 import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.client.request.GsonRequest;
@@ -90,7 +91,7 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
     }
 
     public void loadFriends() {
-        NetworkUtility.getInstance(mContext).addToRequestQueue(
+        RequestManager.getInstance(mContext).addToRequestQueue(
                 new GsonRequest<FriendResponse>(Request.Method.GET, URL_GET_FRIENDS,
                         FriendResponse.class, null, new Response.Listener<FriendResponse>() {
             @Override
