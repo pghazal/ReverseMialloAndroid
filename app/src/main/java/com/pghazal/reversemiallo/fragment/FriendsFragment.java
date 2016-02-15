@@ -37,9 +37,9 @@ public class FriendsFragment extends ListFragment {
     // TODO: delete when not needed anymore
     private void fillFriendListTest() {
         List<Friend> friendList = new ArrayList<>();
-        friendList.add(new Friend("Miallo", "miallo@test.com"));
-        friendList.add(new Friend("Azerty", "azerty@test.com"));
-        friendList.add(new Friend("Foo", "foo@test.com"));
+        friendList.add(new Friend("1", "Miallo", "miallo@test.com"));
+        friendList.add(new Friend("2", "Azerty", "azerty@test.com"));
+        friendList.add(new Friend("3", "Foo", "foo@test.com"));
 
         mAdapter.updateAdapterData(friendList);
     }

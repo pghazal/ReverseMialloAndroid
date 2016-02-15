@@ -1,27 +1,20 @@
 package com.pghazal.reversemiallo.activity;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.adapter.SimpleFragmentPagerAdapter;
-import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
 import com.pghazal.reversemiallo.fragment.SettingsFragment;
 import com.pghazal.reversemiallo.utility.SessionManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         FriendsFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener {
 
