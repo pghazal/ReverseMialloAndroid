@@ -33,6 +33,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.pghazal.reversemiallo.activity.MainActivity" />
         </activity>
+
+        <provider
+            android:name=".provider.FriendContentProvider"
+            android:authorities="com.pghazal.reversemiallo.provider"></provider>
     </application>
 
 </manifest>

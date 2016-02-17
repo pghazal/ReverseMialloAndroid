@@ -3,10 +3,13 @@ package com.pghazal.reversemiallo.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.pghazal.reversemiallo.database.contract.FriendContract;
+import com.pghazal.reversemiallo.database.table.FriendTable;
 
 public class MialloDatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String TAG = "MialloDatabaseHelper";
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "miallo.sqlite";
@@ -17,14 +20,12 @@ public class MialloDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(FriendContract.FriendCommand.TABLE_CREATE);
+        Log.d(TAG, "onCreate");
+
+        FriendTable.onCreate(db);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(FriendContract.FriendCommand.TABLE_DELETE);
-        onCreate(db);
-    }
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+        FriendTable.onUpgrade(db, oldVersion, newVersion);
     }
 }

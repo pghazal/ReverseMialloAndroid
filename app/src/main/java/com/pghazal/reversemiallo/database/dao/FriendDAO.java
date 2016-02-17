@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.pghazal.reversemiallo.database.MialloDatabaseHelper;
-import com.pghazal.reversemiallo.database.contract.FriendContract;
+import com.pghazal.reversemiallo.database.table.FriendTable;
 import com.pghazal.reversemiallo.entity.Friend;
 
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FriendContract.FriendEntry.FRIEND_ID, id);
-        values.put(FriendContract.FriendEntry.FRIEND_USERNAME, username);
-        values.put(FriendContract.FriendEntry.FRIEND_EMAIL, email);
+        values.put(FriendTable.FriendColumn.FRIEND_ID, id);
+        values.put(FriendTable.FriendColumn.FRIEND_USERNAME, username);
+        values.put(FriendTable.FriendColumn.FRIEND_EMAIL, email);
 
         long newRowId;
         newRowId = db.insert(
-                FriendContract.FriendEntry.TABLE_NAME,
+                FriendTable.TABLE_NAME,
                 null,
                 values);
 
@@ -41,14 +41,14 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FriendContract.FriendEntry.FRIEND_USERNAME, username);
-        values.put(FriendContract.FriendEntry.FRIEND_EMAIL, email);
+        values.put(FriendTable.FriendColumn.FRIEND_USERNAME, username);
+        values.put(FriendTable.FriendColumn.FRIEND_EMAIL, email);
 
-        String selection = FriendContract.FriendEntry.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         int count = db.update(
-                FriendContract.FriendEntry.TABLE_NAME,
+                FriendTable.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
@@ -61,10 +61,10 @@ public class FriendDAO {
 
         SQLiteDatabase db = mialloDatabaseHelper.getWritableDatabase();
 
-        String selection = FriendContract.FriendEntry.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
-        return db.delete(FriendContract.FriendEntry.TABLE_NAME, selection, selectionArgs);
+        return db.delete(FriendTable.TABLE_NAME, selection, selectionArgs);
     }
 
     private static Cursor getAll(Context context) {
@@ -73,17 +73,17 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
 //        String[] projection = {
-//                FriendContract.FriendEntry._ID,
-//                FriendContract.FriendEntry.FRIEND_ID,
-//                FriendContract.FriendEntry.FRIEND_USERNAME,
-//                FriendContract.FriendEntry.FRIEND_EMAIL
+//                FriendTable.FriendColumn._ID,
+//                FriendTable.FriendColumn.FRIEND_ID,
+//                FriendTable.FriendColumn.FRIEND_USERNAME,
+//                FriendTable.FriendColumn.FRIEND_EMAIL
 //        };
 //
         String sortOrder =
-                FriendContract.FriendEntry.FRIEND_USERNAME + " DESC";
+                FriendTable.FriendColumn.FRIEND_USERNAME + " DESC";
 //
 //        Cursor c = db.query(
-//                FriendContract.FriendEntry.TABLE_NAME,  // The table to query
+//                FriendTable.FriendColumn.TABLE_NAME,  // The table to query
 //                projection,                               // The columns to return
 //                null,                                // The columns for the WHERE clause
 //                null,                            // The values for the WHERE clause
@@ -93,7 +93,7 @@ public class FriendDAO {
 //        );
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(FriendContract.FriendEntry.TABLE_NAME);
+        qb.setTables(FriendTable.TABLE_NAME);
         Cursor c = qb.query(db, null, null, null, null, null, sortOrder);
 
         c.moveToFirst();
@@ -107,13 +107,13 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
         String sortOrder =
-                FriendContract.FriendEntry.FRIEND_USERNAME + " DESC";
+                FriendTable.FriendColumn.FRIEND_USERNAME + " DESC";
 
-        String selection = FriendContract.FriendEntry.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(FriendContract.FriendEntry.TABLE_NAME);
+        qb.setTables(FriendTable.TABLE_NAME);
         Cursor c = qb.query(db, null, selection, selectionArgs, null, null, sortOrder);
 
         c.moveToFirst();
@@ -130,9 +130,9 @@ public class FriendDAO {
         while (c.moveToNext()) {
 
             Friend friend = new Friend();
-            friend.setId(c.getString(c.getColumnIndexOrThrow(FriendContract.FriendEntry.FRIEND_ID)));
-            friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendContract.FriendEntry.FRIEND_USERNAME)));
-            friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendContract.FriendEntry.FRIEND_EMAIL)));
+            friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
+            friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
+            friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
 
             friends.add(friend);
         }

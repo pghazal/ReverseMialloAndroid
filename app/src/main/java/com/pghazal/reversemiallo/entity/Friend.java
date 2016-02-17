@@ -1,17 +1,17 @@
 package com.pghazal.reversemiallo.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.pghazal.reversemiallo.database.contract.FriendContract;
+import com.pghazal.reversemiallo.database.table.FriendTable;
 
 public class Friend {
 
-    @SerializedName(value = FriendContract.FriendEntry.FRIEND_ID)
+    @SerializedName(value = FriendTable.FriendColumn.FRIEND_ID)
     private String id;
 
-    @SerializedName(value = FriendContract.FriendEntry.FRIEND_EMAIL)
+    @SerializedName(value = FriendTable.FriendColumn.FRIEND_EMAIL)
     private String email;
 
-    @SerializedName(value = FriendContract.FriendEntry.FRIEND_USERNAME)
+    @SerializedName(value = FriendTable.FriendColumn.FRIEND_USERNAME)
     private String username;
 
     @SerializedName("created_at")
