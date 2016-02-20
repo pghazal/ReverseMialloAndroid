@@ -16,25 +16,11 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/textView"
+                android:id="@+id/accountButton"
                 style="@style/SettingsButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text" />
-
-            <Button
-                android:id="@+id/textView2"
-                style="@style/SettingsButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="New Text" />
-
-            <Button
-                android:id="@+id/textView3"
-                style="@style/SettingsButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="New Text" />
+                android:text="Account" />
 
             <Button
                 android:id="@+id/logoutButton"

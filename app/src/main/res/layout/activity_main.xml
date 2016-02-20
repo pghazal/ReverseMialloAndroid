@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
-        app:tabBackground="@color/primary_dark"
+        app:tabBackground="@color/primary"
         app:tabIndicatorColor="@color/primary_darker"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
@@ -22,7 +22,6 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="1"
-        android:background="@color/primary" />
+        android:layout_weight="1" />
 
-</FrameLayout>
+</LinearLayout>

@@ -120,7 +120,11 @@ public class FriendContentProvider extends ContentProvider {
 
         getContext().getContentResolver().notifyChange(uri, null);
 
-        return Uri.parse(BASE_PATH + "/" + id);
+        Uri newUri = Uri.parse(BASE_PATH + "/" + id);
+
+        Log.d(TAG, "# " + newUri);
+
+        return newUri;
     }
 
     @Override
@@ -195,10 +199,10 @@ public class FriendContentProvider extends ContentProvider {
 
     private void checkColumns(String[] projection) {
         String[] available = {
+                FriendTable.FriendColumn._ID,
                 FriendTable.FriendColumn.FRIEND_ID,
                 FriendTable.FriendColumn.FRIEND_EMAIL,
-                FriendTable.FriendColumn.FRIEND_USERNAME,
-                FriendTable.FriendColumn._ID
+                FriendTable.FriendColumn.FRIEND_USERNAME
         };
 
         if (projection != null) {

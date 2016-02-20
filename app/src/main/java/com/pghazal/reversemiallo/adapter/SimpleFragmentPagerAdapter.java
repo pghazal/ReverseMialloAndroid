@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
 import com.pghazal.reversemiallo.fragment.SettingsFragment;
@@ -11,7 +12,7 @@ import com.pghazal.reversemiallo.fragment.SettingsFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
+public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[]{"Friends", "Settings"};
     private Context context;

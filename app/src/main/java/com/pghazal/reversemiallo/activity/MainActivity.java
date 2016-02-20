@@ -20,7 +20,9 @@ public class MainActivity extends BaseActivity implements
 
     private static final String TAG = "MainActivity";
     private static final String TAB_POSITION = "TAB_POSITION";
+
     private static final int REQUEST_CODE_LOGIN = 1;
+    private static final int REQUEST_CODE_ADD_FRIEND = 2;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -79,6 +81,9 @@ public class MainActivity extends BaseActivity implements
                 case REQUEST_CODE_LOGIN:
                     setupActionBar();
                     break;
+
+                case REQUEST_CODE_ADD_FRIEND:
+                    break;
             }
         }
     }
@@ -130,7 +135,7 @@ public class MainActivity extends BaseActivity implements
         Log.d(TAG, "# onAddFriendInteraction");
 
         Intent intent = new Intent(this, AddFriendActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_ADD_FRIEND);
     }
 
     @Override

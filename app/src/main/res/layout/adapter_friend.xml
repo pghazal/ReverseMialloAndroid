@@ -2,23 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/adapter_vertical_margin"
     android:paddingLeft="@dimen/adapter_horizontal_margin"
     android:paddingRight="@dimen/adapter_horizontal_margin"
-    android:paddingTop="@dimen/adapter_vertical_margin"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/adapter_vertical_margin">
 
-    <TextView
-        android:id="@+id/usernameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_launcher"
+        app:civ_border_color="#FF666666"
+        app:civ_border_width="1dp" />
 
-    <TextView
-        android:id="@+id/emailText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 </LinearLayout>
