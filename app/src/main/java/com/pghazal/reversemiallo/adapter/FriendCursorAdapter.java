@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.pghazal.reversemiallo.R;
@@ -65,11 +66,9 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         holder.usernameText.setText(username);
         holder.emailText.setText(email);
 
-        holder.checkbox.setOnClickListener(new View.OnClickListener() {
-
+        holder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (holder.checkbox.isChecked()) {
                     itemCheckedMap.put(id, position);
                     System.out.println("cursor.getPosition(true): " + position);

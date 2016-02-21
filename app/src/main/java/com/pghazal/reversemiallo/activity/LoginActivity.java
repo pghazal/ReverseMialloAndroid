@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 1000);
+                }, 3000);
     }
 
     public boolean validate() {

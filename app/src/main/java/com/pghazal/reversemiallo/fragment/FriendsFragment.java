@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -76,6 +77,8 @@ public class FriendsFragment extends ListFragment implements
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
+        mListView = (ListView) view.findViewById(android.R.id.list);
+
         mSwipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -91,8 +94,39 @@ public class FriendsFragment extends ListFragment implements
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "# onActivityCreated");
 
-        mListView = getListView();
         mListView.setItemsCanFocus(false);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                checkBox.setChecked(!checkBox.isChecked());
+            }
+
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                checkBox.setChecked(!checkBox.isChecked());
+            }
+        });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "TODO: Delete item", Toast.LENGTH_SHORT).show();
+                
+//                getActivity().getContentResolver().delete(
+//                        FriendContentProvider.CONTENT_URI,
+//                        FriendTable.FriendColumn._ID, new String[]{String.valueOf(id)}
+//                );
+
+                return false;
+            }
+        });
 
         HashMap<String, Integer> mapSelectedFriends = null;
 
@@ -119,7 +153,6 @@ public class FriendsFragment extends ListFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.d(TAG, "# onAttach");
-
     }
 
     @Override
@@ -166,7 +199,7 @@ public class FriendsFragment extends ListFragment implements
         mAdapter = new FriendCursorAdapter(getContext(), R.layout.adapter_friend, null,
                 from, to, 0, mapSelectedFriends);
         mAdapter.setOnItemCheckChangeListener(this);
-        setListAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(0, null, this);
     }
