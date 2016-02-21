@@ -19,7 +19,7 @@
             android:layout_height="72dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:src="@android:drawable/ic_lock_idle_lock" />
+            android:src="@drawable/ic_launcher" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

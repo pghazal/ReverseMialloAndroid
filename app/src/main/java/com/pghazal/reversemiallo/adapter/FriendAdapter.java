@@ -5,16 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.activity.MainActivity;
 import com.pghazal.reversemiallo.client.request.RequestManager;
 import com.pghazal.reversemiallo.client.response.FriendResponse;
 import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.client.request.GsonRequest;
+import com.pghazal.reversemiallo.fragment.FriendsFragment;
 import com.pghazal.reversemiallo.utility.NetworkUtility;
 
 import java.util.ArrayList;
@@ -59,8 +63,9 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
             if (convertView != null) {
                 holder.usernameText = (TextView) convertView.findViewById(R.id.usernameText);
                 holder.emailText = (TextView) convertView.findViewById(R.id.emailText);
+                holder.checkbox = (CheckBox) convertView.findViewById(R.id.checkbox);
 
-                convertView.setTag(holder);
+                //holder.checkbox.setOnCheckedChangeListener((FriendsFragment) mContext);
             }
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -70,6 +75,8 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
 
         holder.usernameText.setText(friend.getUsername());
         holder.emailText.setText(friend.getEmail());
+
+        convertView.setTag(holder);
 
         return convertView;
     }
@@ -88,6 +95,7 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
     private static class ViewHolder {
         public TextView usernameText;
         public TextView emailText;
+        public CheckBox checkbox;
     }
 
     public void loadFriends() {

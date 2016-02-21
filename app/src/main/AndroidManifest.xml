@@ -24,10 +24,18 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.Dark.NoActionBar"></activity>
+            android:theme="@style/AppTheme.Dark.NoActionBar" />
         <activity
             android:name=".activity.AddFriendActivity"
             android:label="@string/title_activity_add_friend"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pghazal.reversemiallo.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -37,7 +45,7 @@
         <provider
             android:name=".provider.FriendContentProvider"
             android:authorities="com.pghazal.reversemiallo.provider"
-            android:exported="false"></provider>
+            android:exported="false" />
     </application>
 
 </manifest>

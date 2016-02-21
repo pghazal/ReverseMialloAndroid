@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (password.isEmpty() || password.length() < 6) {
-            passwordText.setError("greater than 6 alphanumeric characters");
+            passwordText.setError("must be greater than 6 characters");
             valid = false;
         } else {
             passwordText.setError(null);

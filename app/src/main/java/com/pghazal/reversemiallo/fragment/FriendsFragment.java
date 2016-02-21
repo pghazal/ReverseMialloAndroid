@@ -14,44 +14,37 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.adapter.FriendCursorAdapter;
 import com.pghazal.reversemiallo.database.table.FriendTable;
+import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.provider.FriendContentProvider;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link ListFragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FriendsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link FriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FriendsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>,
-        SwipeRefreshLayout.OnRefreshListener {
+public class FriendsFragment extends ListFragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        SwipeRefreshLayout.OnRefreshListener,
+        FriendCursorAdapter.OnItemCheckChangeListener {
 
     private static final String TAG = "FriendsFragment";
-    private OnFragmentInteractionListener mListener;
 
     private ListView mListView;
-    private SimpleCursorAdapter mAdapter;
+    private FriendCursorAdapter mAdapter;
     private SwipeRefreshLayout mSwipeContainer;
-
-    // TODO: delete when not needed anymore
-//    private void fillFriendListTest() {
-//        List<Friend> friendList = new ArrayList<>();
-//        friendList.add(new Friend("1", "Miallo", "miallo@test.com"));
-//        friendList.add(new Friend("2", "Azerty", "azerty@test.com"));
-//        friendList.add(new Friend("3", "Foo", "foo@test.com"));
-//
-//        mAdapter.updateAdapterData(friendList);
-//    }
 
     public FriendsFragment() {
     }
@@ -76,8 +69,6 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
 
         if (getArguments() != null) {
         }
-
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -101,49 +92,40 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
         Log.d(TAG, "# onActivityCreated");
 
         mListView = getListView();
+        mListView.setItemsCanFocus(false);
 
-        loadDatas();
+        HashMap<String, Integer> mapSelectedFriends = null;
+
+        if (savedInstanceState != null)
+            mapSelectedFriends =
+                    (HashMap<String, Integer>) savedInstanceState.getSerializable("mapSelectedFriends");
+
+        loadDatas(mapSelectedFriends);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "# onSaveInstanceState");
+
+        HashMap<String, Integer> mapSelectedFriends = mAdapter.getMapSelectedFriends();
+
+        if (mapSelectedFriends != null) {
+            outState.putSerializable("mapSelectedFriends", mapSelectedFriends);
+        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.d(TAG, "# onAttach");
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         Log.d(TAG, "# onDetach");
-        mListener = null;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_fragment_friends, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_friend:
-                if (mListener != null)
-                    mListener.onAddFriendInteraction();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onAddFriendInteraction();
     }
 
     private void addTest() {
@@ -155,7 +137,7 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
         mNewValues.put(FriendTable.FriendColumn.FRIEND_EMAIL, "test@test.fr");
         mNewValues.put(FriendTable.FriendColumn.FRIEND_USERNAME, "jesuisletest");
 
-        mNewUri = getActivity().getContentResolver().insert(
+        mNewUri = getContext().getContentResolver().insert(
                 FriendContentProvider.CONTENT_URI,
                 mNewValues
         );
@@ -169,7 +151,7 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
         );
     }
 
-    private void loadDatas() {
+    private void loadDatas(HashMap<String, Integer> mapSelectedFriends) {
         Log.d(TAG, "# loadDatas");
         // Fields from the database (projection)
         // Must include the _id column for the adapter to work
@@ -181,8 +163,9 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
         // Fields on the UI to which we map
         int[] to = new int[]{R.id.usernameText, R.id.emailText};
 
-        mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.adapter_friend, null,
-                from, to, 0);
+        mAdapter = new FriendCursorAdapter(getContext(), R.layout.adapter_friend, null,
+                from, to, 0, mapSelectedFriends);
+        mAdapter.setOnItemCheckChangeListener(this);
         setListAdapter(mAdapter);
 
         getLoaderManager().initLoader(0, null, this);
@@ -199,7 +182,7 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
                 FriendTable.FriendColumn.FRIEND_EMAIL
         };
 
-        CursorLoader cursorLoader = new CursorLoader(getActivity(),
+        CursorLoader cursorLoader = new CursorLoader(getContext(),
                 FriendContentProvider.CONTENT_URI, projection, null, null, null);
 
         return cursorLoader;
@@ -213,16 +196,11 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // data is not available anymore, delete reference
         mAdapter.swapCursor(null);
     }
 
     @Override
     public void onRefresh() {
-        // Your code to refresh the list here.
-        // Make sure you call mSwipeContainer.setRefreshing(false)
-        // once the network request has completed successfully.
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -236,7 +214,7 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
                         FriendTable.FriendColumn.FRIEND_EMAIL
                 };
 
-                Cursor cursor = getActivity().getContentResolver().query(
+                Cursor cursor = getContext().getContentResolver().query(
                         FriendContentProvider.CONTENT_URI,
                         projection, null, null, null
                 );
@@ -246,5 +224,24 @@ public class FriendsFragment extends ListFragment implements LoaderManager.Loade
                 mSwipeContainer.setRefreshing(false);
             }
         }, 2000);
+    }
+
+    @Override
+    public void onItemCheckChangeListener() {
+        Cursor c = mAdapter.getSelectedFriends();
+
+        if (c != null) {
+            while (c.moveToNext()) {
+
+                Friend friend = new Friend();
+                friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
+                friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
+                friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
+
+                Log.d(TAG, "" + friend.toString());
+            }
+
+            c.close();
+        }
     }
 }

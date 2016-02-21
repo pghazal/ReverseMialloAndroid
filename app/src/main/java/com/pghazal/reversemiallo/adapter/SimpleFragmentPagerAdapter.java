@@ -3,18 +3,17 @@ package com.pghazal.reversemiallo.adapter;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
-import com.pghazal.reversemiallo.fragment.SettingsFragment;
+import com.pghazal.reversemiallo.fragment.GalleryFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[]{"Friends", "Settings"};
+    private String tabTitles[] = new String[]{"Friends", "Gallery"};
     private Context context;
     private List<Fragment> fragmentList;
 
@@ -24,7 +23,7 @@ public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         fragmentList = new ArrayList<>();
         fragmentList.add(FriendsFragment.newInstance());
-        fragmentList.add(SettingsFragment.newInstance());
+        fragmentList.add(GalleryFragment.newInstance());
     }
 
     @Override

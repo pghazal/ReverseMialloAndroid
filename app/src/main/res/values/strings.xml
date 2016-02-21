@@ -9,4 +9,6 @@
     <string name="action_add_friend">Add Friend</string>
 
     <string name="title_activity_add_friend">AddFriendActivity</string>
+
+    <string name="title_activity_settings">Settigns</string>
 </resources>

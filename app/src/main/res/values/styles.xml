@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.Dark.NoActionBar" parent="Theme.AppCompat.NoActionBar">
