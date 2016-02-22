@@ -17,13 +17,13 @@ public class ResizeAnimation extends Animation {
     private float mToWidth;
     private float mFromWidth;
 
-    public ResizeAnimation(View v, float fromWidth, float fromHeight, float toWidth, float toHeight) {
+    public ResizeAnimation(View v, float fromWidth, float fromHeight, float toWidth, float toHeight, int duration) {
         mToHeight = toHeight;
         mToWidth = toWidth;
         mFromHeight = fromHeight;
         mFromWidth = fromWidth;
         mView = v;
-        setDuration(500);
+        setDuration(duration);
     }
 
     @Override

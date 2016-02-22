@@ -269,7 +269,8 @@ public class FriendsFragment extends ListFragment implements
                 mSwipeContainer.getWidth(),
                 mSwipeContainer.getHeight(),
                 mSwipeContainer.getWidth(),
-                mSwipeContainer.getHeight() - actionButton.getHeight());
+                mSwipeContainer.getHeight() - actionButton.getHeight(),
+                500);
         mSwipeContainer.startAnimation(ra);
 
         actionButton.setAlpha(0.0f);
@@ -292,7 +293,8 @@ public class FriendsFragment extends ListFragment implements
                 mSwipeContainer.getWidth(),
                 mSwipeContainer.getHeight(),
                 mSwipeContainer.getWidth(),
-                mSwipeContainer.getHeight() + actionButton.getHeight());
+                mSwipeContainer.getHeight() + actionButton.getHeight(),
+                500);
         mSwipeContainer.startAnimation(ra);
 
         actionButton.setAlpha(1.0f);
