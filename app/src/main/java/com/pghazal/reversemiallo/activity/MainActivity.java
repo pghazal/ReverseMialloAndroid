@@ -13,12 +13,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.adapter.SimpleFragmentPagerAdapter;
+import com.pghazal.reversemiallo.entity.Friend;
+import com.pghazal.reversemiallo.fragment.FriendsFragment;
 import com.pghazal.reversemiallo.utility.SessionManager;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+import java.util.List;
+
+public class MainActivity extends BaseActivity implements
+        View.OnClickListener,
+        FriendsFragment.OnActionButtonClickListener {
 
     private static final String TAG = "MainActivity";
     private static final String TAB_POSITION = "TAB_POSITION";
@@ -123,7 +130,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         startActivityForResult(intent, REQUEST_CODE_ADD_FRIEND);
     }
 
-    private void showSettingsctivity() {
+    private void showSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
@@ -132,7 +139,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.settingsButton:
-                showSettingsctivity();
+                showSettingsActivity();
                 break;
             case R.id.addFriendButton:
                 showAddFriendActivity();
@@ -140,5 +147,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onActionButtonClick(List<Friend> friends) {
+        Log.d(TAG, friends.toString());
     }
 }

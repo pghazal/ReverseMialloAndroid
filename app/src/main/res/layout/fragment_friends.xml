@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.pghazal.reversemiallo.fragment.FriendsFragment">
 
     <!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -51,32 +52,34 @@
         android:text="No friends yet :(" />
 
     <LinearLayout
-        android:id="@+id/sendPanel"
+        android:id="@+id/actionButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/black"
+        android:background="@color/primary"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/adapter_vertical_margin"
-        android:paddingLeft="@dimen/adapter_horizontal_margin"
-        android:paddingRight="@dimen/adapter_horizontal_margin"
-        android:paddingTop="@dimen/adapter_vertical_margin"
-        android:visibility="gone">
+        android:paddingBottom="@dimen/other_vertical_margin"
+        android:paddingLeft="@dimen/other_vertical_margin"
+        android:paddingRight="@dimen/other_vertical_margin"
+        android:paddingTop="@dimen/other_vertical_margin"
+        android:visibility="invisible">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Send"
+            android:text="@string/take_the_picture"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_launcher" />
+            android:contentDescription="@null"
+            android:src="@drawable/ic_action_send" />
 
     </LinearLayout>
 

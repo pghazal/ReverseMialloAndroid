@@ -2,6 +2,7 @@ package com.pghazal.reversemiallo.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import com.pghazal.reversemiallo.database.table.FriendTable;
 import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.provider.FriendContentProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by pierreghazal on 21/02/16.
@@ -23,7 +26,8 @@ import java.util.HashMap;
 public class FriendCursorAdapter extends SimpleCursorAdapter {
 
     public interface OnItemCheckChangeListener {
-        public void onItemCheckChangeListener();
+        public void onItemCheckChangeListener(int position);
+        public void setSelectedFriends(List<Friend> friends);
     }
 
     private static final String TAG = "FriendCursorAdapter";
@@ -76,7 +80,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
                 }
 
                 if (mListener != null)
-                    mListener.onItemCheckChangeListener();
+                    mListener.onItemCheckChangeListener(position);
             }
         });
 
@@ -133,7 +137,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         return mItemCheckedMap;
     }
 
-    public Cursor getSelectedFriends() {
+    private Cursor getSelectedFriends() {
         Cursor c = null;
 
         if (mItemCheckedMap.size() > 0) {
@@ -177,5 +181,40 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         public TextView usernameText;
         public TextView emailText;
         public CheckBox checkbox;
+    }
+
+    public class GetSelectedFriendsAsyncTask extends AsyncTask<Void, Void, List<Friend>> {
+        public GetSelectedFriendsAsyncTask() {
+
+        }
+
+        @Override
+        protected List<Friend> doInBackground(Void... params) {
+            List<Friend> friends = new ArrayList<>();
+
+            Cursor c = getSelectedFriends();
+
+            if (c != null) {
+                while (c.moveToNext()) {
+                    Friend friend = new Friend();
+                    friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
+                    friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
+                    friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
+
+                    friends.add(friend);
+                }
+
+                c.close();
+            }
+
+            return friends;
+        }
+
+        @Override
+        protected void onPostExecute(List<Friend> friends) {
+            super.onPostExecute(friends);
+
+            mListener.setSelectedFriends(friends);
+        }
     }
 }

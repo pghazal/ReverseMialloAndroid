@@ -1,5 +1,8 @@
 package com.pghazal.reversemiallo.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,32 +31,36 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.activity.MainActivity;
 import com.pghazal.reversemiallo.adapter.FriendCursorAdapter;
+import com.pghazal.reversemiallo.animation.ResizeAnimation;
 import com.pghazal.reversemiallo.database.table.FriendTable;
 import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.provider.FriendContentProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-/**
- * A simple {@link ListFragment} subclass.
- * Use the {@link FriendsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FriendsFragment extends ListFragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
-        FriendCursorAdapter.OnItemCheckChangeListener {
+        FriendCursorAdapter.OnItemCheckChangeListener,
+        View.OnClickListener {
+
+    public interface OnActionButtonClickListener {
+        public void onActionButtonClick(List<Friend> friends);
+    }
 
     private static final String TAG = "FriendsFragment";
 
     private ListView mListView;
     private FriendCursorAdapter mAdapter;
     private SwipeRefreshLayout mSwipeContainer;
+    private LinearLayout actionButton;
 
-    private LinearLayout sendPanel;
-    private Animation animBottomUp;
-    private Animation animBottomDown;
+    private OnActionButtonClickListener mListener;
+    private List<Friend> selectedFriends;
 
     public FriendsFragment() {
     }
@@ -128,6 +135,11 @@ public class FriendsFragment extends ListFragment implements
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                if (checkBox.isChecked()) {
+                    checkBox.setChecked(false);
+                }
+
                 Friend f = (Friend) mListView.getItemAtPosition(position);
 
                 getActivity().getContentResolver().delete(
@@ -139,11 +151,9 @@ public class FriendsFragment extends ListFragment implements
             }
         });
 
-        sendPanel = (LinearLayout) getActivity().findViewById(R.id.sendPanel);
-        animBottomUp = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.bottom_up);
-        animBottomDown = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.bottom_down);
+        actionButton = (LinearLayout) getActivity().findViewById(R.id.actionButton);
+        actionButton.setOnClickListener(this);
+        mListener = (MainActivity) getActivity();
 
         HashMap<String, Integer> mapSelectedFriends = null;
         if (savedInstanceState != null)
@@ -241,11 +251,62 @@ public class FriendsFragment extends ListFragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d(TAG, "# onLoadFinished");
         mAdapter.swapCursor(data);
+
+        // Cache la vue si jamais il n'y a plus d'item
+        if (data != null && data.getCount() < 1) {
+            hideActionButton();
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    private void showActionButton() {
+        ResizeAnimation ra = new ResizeAnimation(
+                mSwipeContainer,
+                mSwipeContainer.getWidth(),
+                mSwipeContainer.getHeight(),
+                mSwipeContainer.getWidth(),
+                mSwipeContainer.getHeight() - actionButton.getHeight());
+        mSwipeContainer.startAnimation(ra);
+
+        actionButton.setAlpha(0.0f);
+        actionButton.animate()
+                .setDuration(500)
+                .alpha(1.0f)
+                .translationY(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        actionButton.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void hideActionButton() {
+        ResizeAnimation ra = new ResizeAnimation(
+                mSwipeContainer,
+                mSwipeContainer.getWidth(),
+                mSwipeContainer.getHeight(),
+                mSwipeContainer.getWidth(),
+                mSwipeContainer.getHeight() + actionButton.getHeight());
+        mSwipeContainer.startAnimation(ra);
+
+        actionButton.setAlpha(1.0f);
+        actionButton.animate()
+                .setDuration(500)
+                .alpha(0.0f)
+                .translationY(actionButton.getHeight())
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        actionButton.setVisibility(View.INVISIBLE);
+                    }
+                });
     }
 
     @Override
@@ -276,32 +337,38 @@ public class FriendsFragment extends ListFragment implements
     }
 
     @Override
-    public void onItemCheckChangeListener() {
+    public void onItemCheckChangeListener(int position) {
         int countSelected = mAdapter.getItemSelectedCount();
 
-        if (countSelected > 0 && sendPanel.getVisibility() == View.GONE) {
-            sendPanel.startAnimation(animBottomUp);
-            sendPanel.setVisibility(View.VISIBLE);
-        } else if (countSelected <= 0 && sendPanel.getVisibility() == View.VISIBLE) {
-            sendPanel.startAnimation(animBottomDown);
-            sendPanel.setVisibility(View.GONE);
+        if (countSelected > 0 && actionButton.getVisibility() == View.INVISIBLE) {
+            showActionButton();
+        } else if (countSelected <= 0 && actionButton.getVisibility() == View.VISIBLE) {
+            hideActionButton();
+        }
+    }
+
+    @Override
+    public void setSelectedFriends(List<Friend> friends) {
+        if (selectedFriends == null) {
+            selectedFriends = new ArrayList<>();
         }
 
+        selectedFriends.clear();
+        selectedFriends.addAll(friends);
 
-//        Cursor c = mAdapter.getSelectedFriends();
-//
-//        if (c != null) {
-//            while (c.moveToNext()) {
-//
-//                Friend friend = new Friend();
-//                friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
-//                friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
-//                friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
-//
-//                Log.d(TAG, "" + friend.toString());
-//            }
-//
-//            c.close();
-//        }
+        mListener.onActionButtonClick(selectedFriends);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.actionButton:
+                FriendCursorAdapter.GetSelectedFriendsAsyncTask task =
+                        mAdapter.new GetSelectedFriendsAsyncTask();
+                task.execute();
+                break;
+            default:
+                break;
+        }
     }
 }
