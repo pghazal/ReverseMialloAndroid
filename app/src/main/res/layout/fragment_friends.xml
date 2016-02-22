@@ -16,7 +16,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ListView
             android:id="@android:id/list"
@@ -49,6 +49,36 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="No friends yet :(" />
+
+    <LinearLayout
+        android:id="@+id/sendPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/adapter_vertical_margin"
+        android:paddingLeft="@dimen/adapter_horizontal_margin"
+        android:paddingRight="@dimen/adapter_horizontal_margin"
+        android:paddingTop="@dimen/adapter_vertical_margin"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
 
     <!--</android.support.design.widget.CoordinatorLayout>-->
 </RelativeLayout>

@@ -16,11 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
@@ -47,6 +51,10 @@ public class FriendsFragment extends ListFragment implements
     private FriendCursorAdapter mAdapter;
     private SwipeRefreshLayout mSwipeContainer;
 
+    private LinearLayout sendPanel;
+    private Animation animBottomUp;
+    private Animation animBottomDown;
+
     public FriendsFragment() {
     }
 
@@ -67,6 +75,19 @@ public class FriendsFragment extends ListFragment implements
         super.onCreate(savedInstanceState);
         Log.d(TAG, "# onCreate");
         setRetainInstance(true);
+
+//        addTest("1");
+//        addTest("2");
+//        addTest("3");
+//        addTest("4");
+//        addTest("5");
+//        addTest("6");
+//        addTest("7");
+//        addTest("8");
+//        addTest("9");
+//        addTest("10");
+//        addTest("11");
+//        addTest("12");
 
         if (getArguments() != null) {
         }
@@ -104,32 +125,27 @@ public class FriendsFragment extends ListFragment implements
             }
 
         });
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-                checkBox.setChecked(!checkBox.isChecked());
-            }
-        });
-
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "TODO: Delete item", Toast.LENGTH_SHORT).show();
-                
-//                getActivity().getContentResolver().delete(
-//                        FriendContentProvider.CONTENT_URI,
-//                        FriendTable.FriendColumn._ID, new String[]{String.valueOf(id)}
-//                );
+                Friend f = (Friend) mListView.getItemAtPosition(position);
 
-                return false;
+                getActivity().getContentResolver().delete(
+                        FriendContentProvider.CONTENT_URI,
+                        FriendTable.FriendColumn.FRIEND_ID + " LIKE ?", new String[]{f.getId()}
+                );
+
+                return true;
             }
         });
 
-        HashMap<String, Integer> mapSelectedFriends = null;
+        sendPanel = (LinearLayout) getActivity().findViewById(R.id.sendPanel);
+        animBottomUp = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.bottom_up);
+        animBottomDown = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.bottom_down);
 
+        HashMap<String, Integer> mapSelectedFriends = null;
         if (savedInstanceState != null)
             mapSelectedFriends =
                     (HashMap<String, Integer>) savedInstanceState.getSerializable("mapSelectedFriends");
@@ -161,14 +177,14 @@ public class FriendsFragment extends ListFragment implements
         Log.d(TAG, "# onDetach");
     }
 
-    private void addTest() {
+    private void addTest(String id) {
         Uri mNewUri;
 
         ContentValues mNewValues = new ContentValues();
 
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_ID, "1");
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_EMAIL, "test@test.fr");
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_USERNAME, "jesuisletest");
+        mNewValues.put(FriendTable.FriendColumn.FRIEND_ID, id);
+        mNewValues.put(FriendTable.FriendColumn.FRIEND_EMAIL, id + "@test.fr");
+        mNewValues.put(FriendTable.FriendColumn.FRIEND_USERNAME, "jesuisletest # " + id);
 
         mNewUri = getContext().getContentResolver().insert(
                 FriendContentProvider.CONTENT_URI,
@@ -238,7 +254,7 @@ public class FriendsFragment extends ListFragment implements
             @Override
             public void run() {
                 // TODO : Add network get request with Volley
-                addTest();
+                //addTest();
 
                 String[] projection = {
                         FriendTable.FriendColumn._ID,
@@ -261,20 +277,31 @@ public class FriendsFragment extends ListFragment implements
 
     @Override
     public void onItemCheckChangeListener() {
-        Cursor c = mAdapter.getSelectedFriends();
+        int countSelected = mAdapter.getItemSelectedCount();
 
-        if (c != null) {
-            while (c.moveToNext()) {
-
-                Friend friend = new Friend();
-                friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
-                friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
-                friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
-
-                Log.d(TAG, "" + friend.toString());
-            }
-
-            c.close();
+        if (countSelected > 0 && sendPanel.getVisibility() == View.GONE) {
+            sendPanel.startAnimation(animBottomUp);
+            sendPanel.setVisibility(View.VISIBLE);
+        } else if (countSelected <= 0 && sendPanel.getVisibility() == View.VISIBLE) {
+            sendPanel.startAnimation(animBottomDown);
+            sendPanel.setVisibility(View.GONE);
         }
+
+
+//        Cursor c = mAdapter.getSelectedFriends();
+//
+//        if (c != null) {
+//            while (c.moveToNext()) {
+//
+//                Friend friend = new Friend();
+//                friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
+//                friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
+//                friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
+//
+//                Log.d(TAG, "" + friend.toString());
+//            }
+//
+//            c.close();
+//        }
     }
 }

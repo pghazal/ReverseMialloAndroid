@@ -45,6 +45,7 @@
         <provider
             android:name=".provider.FriendContentProvider"
             android:authorities="com.pghazal.reversemiallo.provider"
+            android:enabled="true"
             android:exported="false" />
     </application>
 

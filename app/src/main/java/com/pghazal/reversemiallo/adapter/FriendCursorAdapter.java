@@ -2,9 +2,7 @@ package com.pghazal.reversemiallo.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,7 @@ import android.widget.TextView;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.database.table.FriendTable;
-import com.pghazal.reversemiallo.fragment.FriendsFragment;
+import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.provider.FriendContentProvider;
 
 import java.util.HashMap;
@@ -30,7 +28,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
 
     private static final String TAG = "FriendCursorAdapter";
 
-    private HashMap<String, Integer> itemCheckedMap = new HashMap<>();
+    private HashMap<String, Integer> mItemCheckedMap = new HashMap<>();
     private OnItemCheckChangeListener mListener;
 
     public FriendCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to,
@@ -40,9 +38,9 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         this.mContext = context;
         this.mListener = null;
 
-        if(map != null) {
-            itemCheckedMap.clear();
-            itemCheckedMap.putAll(map);
+        if (map != null) {
+            mItemCheckedMap.clear();
+            mItemCheckedMap.putAll(map);
         }
     }
 
@@ -70,10 +68,10 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (holder.checkbox.isChecked()) {
-                    itemCheckedMap.put(id, position);
+                    mItemCheckedMap.put(id, position);
                     System.out.println("cursor.getPosition(true): " + position);
                 } else if (!holder.checkbox.isChecked()) {
-                    itemCheckedMap.remove(id);
+                    mItemCheckedMap.remove(id);
                     System.out.println("cursor.getPosition(false): " + position);
                 }
 
@@ -82,7 +80,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
             }
         });
 
-        if (itemCheckedMap.size() > 0 && itemCheckedMap.containsKey(id))
+        if (mItemCheckedMap.size() > 0 && mItemCheckedMap.containsKey(id))
             holder.checkbox.setChecked(true);
         else
             holder.checkbox.setChecked(false);
@@ -106,14 +104,39 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         return v;
     }
 
+    @Override
+    public Friend getItem(int position) {
+        Cursor cursor = super.getCursor();
+
+        if (cursor != null) {
+            cursor.moveToPosition(position);
+
+            String id = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID));
+            String username = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME));
+            String email = cursor.getString(
+                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL));
+
+            Friend friend = new Friend();
+            friend.setId(id);
+            friend.setUsername(username);
+            friend.setEmail(email);
+
+            return friend;
+        }
+
+        return null;
+    }
+
     public HashMap<String, Integer> getMapSelectedFriends() {
-        return itemCheckedMap;
+        return mItemCheckedMap;
     }
 
     public Cursor getSelectedFriends() {
         Cursor c = null;
 
-        if (itemCheckedMap.size() > 0) {
+        if (mItemCheckedMap.size() > 0) {
             String[] projection = {
                     FriendTable.FriendColumn._ID,
                     FriendTable.FriendColumn.FRIEND_ID,
@@ -121,14 +144,14 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
                     FriendTable.FriendColumn.FRIEND_EMAIL
             };
 
-            int size = itemCheckedMap.size();
+            int size = mItemCheckedMap.size();
 
             String selection = FriendContentProvider.makePlaceholders(size);
 
             String[] keys = new String[size];
             Integer[] values = new Integer[size];
             int index = 0;
-            for (HashMap.Entry<String, Integer> mapEntry : itemCheckedMap.entrySet()) {
+            for (HashMap.Entry<String, Integer> mapEntry : mItemCheckedMap.entrySet()) {
                 keys[index] = mapEntry.getKey();
                 values[index] = mapEntry.getValue();
                 index++;
@@ -140,6 +163,14 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         }
 
         return c;
+    }
+
+    public int getItemSelectedCount() {
+        if (mItemCheckedMap != null) {
+            return mItemCheckedMap.size();
+        }
+
+        return 0;
     }
 
     private static class ViewHolder {

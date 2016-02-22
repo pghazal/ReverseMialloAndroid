@@ -20,8 +20,6 @@ public class Friend {
     @SerializedName("updated_at")
     private String updatedAt;
 
-    private Boolean selected;
-
     public Friend() {
     }
 
@@ -29,7 +27,6 @@ public class Friend {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.selected = false;
     }
 
     public Friend(String id, String email, String username, String createdAt, String updatedAt) {
@@ -38,7 +35,6 @@ public class Friend {
         this.username = username;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.selected = false;
     }
 
     public String getId() {
