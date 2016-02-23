@@ -60,11 +60,11 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         final int position = cursor.getPosition();
 
         final String id = cursor.getString(
-                cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID));
+                cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_ID));
         String username = cursor.getString(
-                cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME));
+                cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_USERNAME));
         String email = cursor.getString(
-                cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL));
+                cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_EMAIL));
 
         holder.usernameText.setText(username);
         holder.emailText.setText(email);
@@ -117,11 +117,11 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
             cursor.moveToPosition(position);
 
             String id = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID));
+                    cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_ID));
             String username = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME));
+                    cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_USERNAME));
             String email = cursor.getString(
-                    cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL));
+                    cursor.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_EMAIL));
 
             Friend friend = new Friend();
             friend.setId(id);
@@ -143,10 +143,10 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
 
         if (mItemCheckedMap.size() > 0) {
             String[] projection = {
-                    FriendTable.FriendColumn._ID,
-                    FriendTable.FriendColumn.FRIEND_ID,
-                    FriendTable.FriendColumn.FRIEND_USERNAME,
-                    FriendTable.FriendColumn.FRIEND_EMAIL
+                    FriendTable.Columns._ID,
+                    FriendTable.Columns.FRIEND_ID,
+                    FriendTable.Columns.FRIEND_USERNAME,
+                    FriendTable.Columns.FRIEND_EMAIL
             };
 
             int size = mItemCheckedMap.size();
@@ -164,7 +164,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
 
             c = mContext.getContentResolver().query(
                     FriendContentProvider.CONTENT_URI, projection,
-                    FriendTable.FriendColumn._ID + " IN (" + selection + ")", keys, null);
+                    FriendTable.Columns._ID + " IN (" + selection + ")", keys, null);
         }
 
         return c;
@@ -197,9 +197,9 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
             if (c != null) {
                 while (c.moveToNext()) {
                     Friend friend = new Friend();
-                    friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
-                    friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
-                    friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
+                    friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_ID)));
+                    friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_USERNAME)));
+                    friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_EMAIL)));
 
                     friends.add(friend);
                 }

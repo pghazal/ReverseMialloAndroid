@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.pghazal.reversemiallo.database.MialloDatabaseHelper;
-import com.pghazal.reversemiallo.database.table.FriendTable;
+import com.pghazal.reversemiallo.database.table.FriendRequestTable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,33 +21,33 @@ import java.util.HashSet;
 /**
  * Created by Pierre Ghazal on 17/02/2016.
  */
-public class FriendContentProvider extends ContentProvider {
-    private static final String TAG = "FriendContentProvider";
+public class FriendRequestContentProvider extends ContentProvider {
+    private static final String TAG = "FRequestContentProvider";
 
     // used for the UriMacher
-    private static final int FRIENDS = 10;
-    private static final int FRIENDS_ID = 20;
+    private static final int FRIEND_REQUESTS = 10;
+    private static final int FRIEND_REQUESTS_ID = 20;
 
-    private static final String AUTHORITY = "com.pghazal.reversemiallo.provider.friends";
-    private static final String BASE_PATH = FriendTable.TABLE_NAME;
+    private static final String AUTHORITY = "com.pghazal.reversemiallo.provider.friend_requests";
+    private static final String BASE_PATH = FriendRequestTable.TABLE_NAME;
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
             + "/" + BASE_PATH);
 
     public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-            + "/friends";
+            + "/friend_requests";
     public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-            + "/friend";
+            + "/friend_request";
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        sURIMatcher.addURI(AUTHORITY, BASE_PATH, FRIENDS);
-        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", FRIENDS_ID);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH, FRIEND_REQUESTS);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", FRIEND_REQUESTS_ID);
     }
 
     private MialloDatabaseHelper database;
 
-    public FriendContentProvider() {
+    public FriendRequestContentProvider() {
         super();
     }
 
@@ -73,16 +73,16 @@ public class FriendContentProvider extends ContentProvider {
         // check if the caller has requested a column which does not exists
         checkColumns(projection);
 
-        qb.setTables(FriendTable.TABLE_NAME);
+        qb.setTables(FriendRequestTable.TABLE_NAME);
 
         int uriType = sURIMatcher.match(uri);
 
         switch (uriType) {
-            case FRIENDS:
+            case FRIEND_REQUESTS:
                 break;
-            case FRIENDS_ID:
+            case FRIEND_REQUESTS_ID:
                 // adding the ID to the original query
-                qb.appendWhere(FriendTable.Columns._ID + "="
+                qb.appendWhere(FriendRequestTable.Columns._ID + "="
                         + uri.getLastPathSegment());
                 break;
             default:
@@ -111,8 +111,8 @@ public class FriendContentProvider extends ContentProvider {
         long id = 0;
 
         switch (uriType) {
-            case FRIENDS:
-                id = sqlDB.insert(FriendTable.TABLE_NAME, null, values);
+            case FRIEND_REQUESTS:
+                id = sqlDB.insert(FriendRequestTable.TABLE_NAME, null, values);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -136,18 +136,18 @@ public class FriendContentProvider extends ContentProvider {
         int rowsDeleted = 0;
 
         switch (uriType) {
-            case FRIENDS:
-                rowsDeleted = sqlDB.delete(FriendTable.TABLE_NAME, selection,
+            case FRIEND_REQUESTS:
+                rowsDeleted = sqlDB.delete(FriendRequestTable.TABLE_NAME, selection,
                         selectionArgs);
                 break;
-            case FRIENDS_ID:
+            case FRIEND_REQUESTS_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
-                    rowsDeleted = sqlDB.delete(FriendTable.TABLE_NAME,
-                            FriendTable.Columns._ID + "=" + id, null);
+                    rowsDeleted = sqlDB.delete(FriendRequestTable.TABLE_NAME,
+                            FriendRequestTable.Columns._ID + "=" + id, null);
                 } else {
-                    rowsDeleted = sqlDB.delete(FriendTable.TABLE_NAME,
-                            FriendTable.Columns._ID + "=" + id
+                    rowsDeleted = sqlDB.delete(FriendRequestTable.TABLE_NAME,
+                            FriendRequestTable.Columns._ID + "=" + id
                                     + " and " + selection, selectionArgs);
                 }
                 break;
@@ -156,6 +156,8 @@ public class FriendContentProvider extends ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
+
+        Log.d(TAG, "# Number of rows deleted : " + rowsDeleted);
 
         return rowsDeleted;
     }
@@ -170,20 +172,20 @@ public class FriendContentProvider extends ContentProvider {
         int rowsUpdated = 0;
 
         switch (uriType) {
-            case FRIENDS:
-                rowsUpdated = sqlDB.update(FriendTable.TABLE_NAME,
+            case FRIEND_REQUESTS:
+                rowsUpdated = sqlDB.update(FriendRequestTable.TABLE_NAME,
                         values,
                         selection,
                         selectionArgs);
                 break;
-            case FRIENDS_ID:
+            case FRIEND_REQUESTS_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
-                    rowsUpdated = sqlDB.update(FriendTable.TABLE_NAME,
-                            values, FriendTable.Columns._ID + "=" + id, null);
+                    rowsUpdated = sqlDB.update(FriendRequestTable.TABLE_NAME,
+                            values, FriendRequestTable.Columns._ID + "=" + id, null);
                 } else {
-                    rowsUpdated = sqlDB.update(FriendTable.TABLE_NAME,
-                            values, FriendTable.Columns._ID + "=" + id
+                    rowsUpdated = sqlDB.update(FriendRequestTable.TABLE_NAME,
+                            values, FriendRequestTable.Columns._ID + "=" + id
                                     + " and "
                                     + selection, selectionArgs);
                 }
@@ -194,15 +196,18 @@ public class FriendContentProvider extends ContentProvider {
 
         getContext().getContentResolver().notifyChange(uri, null);
 
+        Log.d(TAG, "# Number of rows updated : " + rowsUpdated);
+
         return rowsUpdated;
     }
 
     private void checkColumns(String[] projection) {
         String[] available = {
-                FriendTable.Columns._ID,
-                FriendTable.Columns.FRIEND_ID,
-                FriendTable.Columns.FRIEND_EMAIL,
-                FriendTable.Columns.FRIEND_USERNAME
+                FriendRequestTable.Columns._ID,
+                FriendRequestTable.Columns.FRIEND_REQUEST_ID,
+                FriendRequestTable.Columns.FRIEND_REQUEST_ID_ASKER,
+                FriendRequestTable.Columns.FRIEND_REQUEST_ID_NEW_FRIEND,
+                FriendRequestTable.Columns.FRIEND_REQUEST_STATE,
         };
 
         if (projection != null) {

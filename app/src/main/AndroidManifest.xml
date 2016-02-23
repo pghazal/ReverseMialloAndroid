@@ -73,7 +73,12 @@
 
         <provider
             android:name=".provider.FriendContentProvider"
-            android:authorities="com.pghazal.reversemiallo.provider"
+            android:authorities="com.pghazal.reversemiallo.provider.friends"
+            android:enabled="true"
+            android:exported="false" />
+        <provider
+            android:name=".provider.FriendRequestContentProvider"
+            android:authorities="com.pghazal.reversemiallo.provider.friend_requests"
             android:enabled="true"
             android:exported="false" />
     </application>

@@ -8,7 +8,7 @@ public abstract class FriendTable {
 
     public static final String TABLE_NAME = "friends";
 
-    public static abstract class FriendColumn implements BaseColumns {
+    public static abstract class Columns implements BaseColumns {
 
         public static final String FRIEND_ID = "id";
         public static final String FRIEND_USERNAME = "username";
@@ -18,10 +18,10 @@ public abstract class FriendTable {
     private static abstract class FriendCommand {
         public static final String TABLE_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
-                        FriendColumn._ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
-                        FriendColumn.FRIEND_ID + " TEXT" + "," +
-                        FriendColumn.FRIEND_USERNAME + " TEXT" + "," +
-                        FriendColumn.FRIEND_EMAIL + " TEXT" +
+                        Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + "," +
+                        Columns.FRIEND_ID + " TEXT" + "," +
+                        Columns.FRIEND_USERNAME + " TEXT" + "," +
+                        Columns.FRIEND_EMAIL + " TEXT" +
                         " )";
 
         public static final String TABLE_DELETE =

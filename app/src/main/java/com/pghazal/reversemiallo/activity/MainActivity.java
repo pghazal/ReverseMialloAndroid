@@ -41,15 +41,6 @@ public class MainActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        try {
-            Log.d(TAG, "#YOLOOO1");
-
-        } catch (OutOfMemoryError error) {
-            Log.d(TAG, "#YOLOOO2");
-            error.printStackTrace();
-        }
-
         Log.d(TAG, "# onCreate");
 
         if (!SessionManager.isLoggedIn(this)) {

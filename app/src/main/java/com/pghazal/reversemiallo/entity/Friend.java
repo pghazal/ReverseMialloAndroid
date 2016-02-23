@@ -8,13 +8,13 @@ import com.pghazal.reversemiallo.database.table.FriendTable;
 
 public class Friend implements Parcelable {
 
-    @SerializedName(value = FriendTable.FriendColumn.FRIEND_ID)
+    @SerializedName(value = FriendTable.Columns.FRIEND_ID)
     private String id;
 
-    @SerializedName(value = FriendTable.FriendColumn.FRIEND_EMAIL)
+    @SerializedName(value = FriendTable.Columns.FRIEND_EMAIL)
     private String email;
 
-    @SerializedName(value = FriendTable.FriendColumn.FRIEND_USERNAME)
+    @SerializedName(value = FriendTable.Columns.FRIEND_USERNAME)
     private String username;
 
     @SerializedName("created_at")

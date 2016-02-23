@@ -138,7 +138,7 @@ public class FriendsFragment extends ListFragment implements
 
                 getActivity().getContentResolver().delete(
                         FriendContentProvider.CONTENT_URI,
-                        FriendTable.FriendColumn.FRIEND_ID + " LIKE ?", new String[]{f.getId()}
+                        FriendTable.Columns.FRIEND_ID + " LIKE ?", new String[]{f.getId()}
                 );
 
                 return true;
@@ -186,9 +186,9 @@ public class FriendsFragment extends ListFragment implements
 
         ContentValues mNewValues = new ContentValues();
 
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_ID, id);
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_EMAIL, id + "@test.fr");
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_USERNAME, "jesuisletest # " + id);
+        mNewValues.put(FriendTable.Columns.FRIEND_ID, id);
+        mNewValues.put(FriendTable.Columns.FRIEND_EMAIL, id + "@test.fr");
+        mNewValues.put(FriendTable.Columns.FRIEND_USERNAME, "jesuisletest # " + id);
 
         mNewUri = getContext().getContentResolver().insert(
                 FriendContentProvider.CONTENT_URI,
@@ -209,8 +209,8 @@ public class FriendsFragment extends ListFragment implements
         // Fields from the database (projection)
         // Must include the _id column for the adapter to work
         String[] from = new String[]{
-                FriendTable.FriendColumn.FRIEND_USERNAME,
-                FriendTable.FriendColumn.FRIEND_EMAIL
+                FriendTable.Columns.FRIEND_USERNAME,
+                FriendTable.Columns.FRIEND_EMAIL
         };
 
         // Fields on the UI to which we map
@@ -229,10 +229,10 @@ public class FriendsFragment extends ListFragment implements
         Log.d(TAG, "# onCreateLoader");
 
         String[] projection = {
-                FriendTable.FriendColumn._ID,
-                FriendTable.FriendColumn.FRIEND_ID,
-                FriendTable.FriendColumn.FRIEND_USERNAME,
-                FriendTable.FriendColumn.FRIEND_EMAIL
+                FriendTable.Columns._ID,
+                FriendTable.Columns.FRIEND_ID,
+                FriendTable.Columns.FRIEND_USERNAME,
+                FriendTable.Columns.FRIEND_EMAIL
         };
 
         CursorLoader cursorLoader = new CursorLoader(getContext(),
@@ -322,10 +322,10 @@ public class FriendsFragment extends ListFragment implements
                 //addTest();
 
                 String[] projection = {
-                        FriendTable.FriendColumn._ID,
-                        FriendTable.FriendColumn.FRIEND_ID,
-                        FriendTable.FriendColumn.FRIEND_USERNAME,
-                        FriendTable.FriendColumn.FRIEND_EMAIL
+                        FriendTable.Columns._ID,
+                        FriendTable.Columns.FRIEND_ID,
+                        FriendTable.Columns.FRIEND_USERNAME,
+                        FriendTable.Columns.FRIEND_EMAIL
                 };
 
                 Cursor cursor = getContext().getContentResolver().query(

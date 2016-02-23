@@ -2,13 +2,11 @@ package com.pghazal.reversemiallo.fragment;
 
 import android.content.ContentValues;
 import android.database.MatrixCursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,16 +14,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
+import com.pghazal.reversemiallo.activity.LoginActivity;
 import com.pghazal.reversemiallo.adapter.FriendCursorAdapter;
+import com.pghazal.reversemiallo.database.table.FriendRequestTable;
 import com.pghazal.reversemiallo.database.table.FriendTable;
 import com.pghazal.reversemiallo.entity.Friend;
-import com.pghazal.reversemiallo.provider.FriendContentProvider;
+import com.pghazal.reversemiallo.entity.FriendRequest;
+import com.pghazal.reversemiallo.provider.FriendRequestContentProvider;
+import com.pghazal.reversemiallo.utility.SettingsUtility;
 import com.pghazal.reversemiallo.utility.UIUtility;
 import com.pghazal.reversemiallo.widget.ClearableEditText;
 
@@ -84,8 +84,8 @@ public class AddFriendFragment extends ListFragment implements
 
     private void initAdapter() {
         String[] from = new String[]{
-                FriendTable.FriendColumn.FRIEND_USERNAME,
-                FriendTable.FriendColumn.FRIEND_EMAIL
+                FriendTable.Columns.FRIEND_USERNAME,
+                FriendTable.Columns.FRIEND_EMAIL
         };
 
         int[] to = new int[]{R.id.usernameText, R.id.emailText};
@@ -135,7 +135,6 @@ public class AddFriendFragment extends ListFragment implements
                 CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
                 checkBox.setChecked(!checkBox.isChecked());
             }
-
         });
     }
 
@@ -143,10 +142,18 @@ public class AddFriendFragment extends ListFragment implements
     public void onItemCheckChangeListener(int position) {
         Friend f = mAdapter.getItem(position);
 
-        //TODO: Add to Friend Request Provider and then sync
+        View view = mListView.getChildAt(position);
+        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
 
-        addTest(f);
+        if (checkBox.isChecked()) {
+            //TODO: Add to Friend Request Provider and then sync
+            addFriendRequest(f);
+        } else {
+            //TODO: ARemove Friend Request Provider and then sync
+            removeFriendRequest(f);
+        }
     }
+
 
     @Override
     public void setSelectedFriends(List<Friend> friends) {
@@ -167,18 +174,17 @@ public class AddFriendFragment extends ListFragment implements
 
             List<Friend> friends = new ArrayList<>();
 
-            friends.add(new Friend("300", "Miallo1", "miallo@test.fr"));
+            friends.add(new Friend("299", "Miallo1", "miallo@test.fr"));
             friends.add(new Friend("301", "Miallo2", "miallo@test.fr"));
             friends.add(new Friend("302", "Miallo3", "miallo@test.fr"));
             friends.add(new Friend("303", "Miallo4", "miallo@test.fr"));
             friends.add(new Friend("304", "Miallo5", "miallo@test.fr"));
 
-
             String[] columns = new String[]{
-                    FriendTable.FriendColumn._ID,
-                    FriendTable.FriendColumn.FRIEND_ID,
-                    FriendTable.FriendColumn.FRIEND_USERNAME,
-                    FriendTable.FriendColumn.FRIEND_EMAIL
+                    FriendTable.Columns._ID,
+                    FriendTable.Columns.FRIEND_ID,
+                    FriendTable.Columns.FRIEND_USERNAME,
+                    FriendTable.Columns.FRIEND_EMAIL
             };
 
             MatrixCursor matrixCursor = new MatrixCursor(columns);
@@ -197,18 +203,36 @@ public class AddFriendFragment extends ListFragment implements
         }
     }
 
-    private void addTest(Friend friend) {
-        Uri mNewUri;
-
+    private void addFriendRequest(Friend friend) {
         ContentValues mNewValues = new ContentValues();
 
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_ID, friend.getId());
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_EMAIL, friend.getUsername() + "@test.fr");
-        mNewValues.put(FriendTable.FriendColumn.FRIEND_USERNAME, friend.getUsername());
+        String currentUserId = SettingsUtility.get(getContext(), LoginActivity.KEY_USER_ID, null);
 
-        mNewUri = getActivity().getContentResolver().insert(
-                FriendContentProvider.CONTENT_URI,
-                mNewValues
+        if (currentUserId != null) {
+            mNewValues.put(FriendRequestTable.Columns.FRIEND_REQUEST_ID_ASKER, currentUserId);
+            mNewValues.put(FriendRequestTable.Columns.FRIEND_REQUEST_ID_NEW_FRIEND, friend.getId());
+            mNewValues.put(FriendRequestTable.Columns.FRIEND_REQUEST_STATE, FriendRequest.STATE.SENT);
+
+            getActivity().getContentResolver().insert(
+                    FriendRequestContentProvider.CONTENT_URI,
+                    mNewValues
+            );
+        }
+    }
+
+    private void removeFriendRequest(Friend f) {
+        String currentUserId = SettingsUtility.get(getContext(), LoginActivity.KEY_USER_ID, null);
+
+        getActivity().getContentResolver().delete(
+                FriendRequestContentProvider.CONTENT_URI,
+                FriendRequestTable.Columns.FRIEND_REQUEST_ID_ASKER + " LIKE ? AND " +
+                        FriendRequestTable.Columns.FRIEND_REQUEST_ID_NEW_FRIEND + " LIKE ? AND " +
+                        FriendRequestTable.Columns.FRIEND_REQUEST_STATE + " LIKE ?",
+                new String[]{
+                        currentUserId,
+                        f.getId(),
+                        Integer.toString(FriendRequest.STATE.SENT)
+                }
         );
     }
 

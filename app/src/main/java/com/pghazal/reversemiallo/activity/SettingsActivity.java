@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.utility.SessionManager;
+import com.pghazal.reversemiallo.utility.SettingsUtility;
 
 public class SettingsActivity extends AppCompatActivity  implements View.OnClickListener{
 
@@ -28,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity  implements View.OnClick
     private void logout() {
         if (SessionManager.isLoggedIn(this)) {
             SessionManager.setLoggedIn(this, false);
+            SettingsUtility.set(this, LoginActivity.KEY_USER_ID, null);
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

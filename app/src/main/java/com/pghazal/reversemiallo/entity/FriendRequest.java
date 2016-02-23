@@ -7,6 +7,12 @@ import com.google.gson.annotations.SerializedName;
  */
 public class FriendRequest {
 
+    public interface STATE {
+        int SENT = 0;
+        int ACCEPTED = 1;
+        int REFUSED = 2;
+    }
+
     @SerializedName("id")
     private String id;
 

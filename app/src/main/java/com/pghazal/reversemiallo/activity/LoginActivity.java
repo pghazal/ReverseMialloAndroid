@@ -13,10 +13,13 @@ import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.utility.SessionManager;
+import com.pghazal.reversemiallo.utility.SettingsUtility;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
+
+    public static final String KEY_USER_ID = "KEY_USER_ID";
 
     private EditText emailText;
     private EditText passwordText;
@@ -151,6 +154,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         SessionManager.setLoggedIn(this, true);
+
+        SettingsUtility.set(this, KEY_USER_ID, "300");
 
         loginButton.setEnabled(true);
 

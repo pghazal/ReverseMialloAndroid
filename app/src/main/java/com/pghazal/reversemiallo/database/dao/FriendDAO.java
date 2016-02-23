@@ -22,9 +22,9 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FriendTable.FriendColumn.FRIEND_ID, id);
-        values.put(FriendTable.FriendColumn.FRIEND_USERNAME, username);
-        values.put(FriendTable.FriendColumn.FRIEND_EMAIL, email);
+        values.put(FriendTable.Columns.FRIEND_ID, id);
+        values.put(FriendTable.Columns.FRIEND_USERNAME, username);
+        values.put(FriendTable.Columns.FRIEND_EMAIL, email);
 
         long newRowId;
         newRowId = db.insert(
@@ -41,10 +41,10 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(FriendTable.FriendColumn.FRIEND_USERNAME, username);
-        values.put(FriendTable.FriendColumn.FRIEND_EMAIL, email);
+        values.put(FriendTable.Columns.FRIEND_USERNAME, username);
+        values.put(FriendTable.Columns.FRIEND_EMAIL, email);
 
-        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.Columns.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         int count = db.update(
@@ -61,7 +61,7 @@ public class FriendDAO {
 
         SQLiteDatabase db = mialloDatabaseHelper.getWritableDatabase();
 
-        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.Columns.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         return db.delete(FriendTable.TABLE_NAME, selection, selectionArgs);
@@ -73,17 +73,17 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
 //        String[] projection = {
-//                FriendTable.FriendColumn._ID,
-//                FriendTable.FriendColumn.FRIEND_ID,
-//                FriendTable.FriendColumn.FRIEND_USERNAME,
-//                FriendTable.FriendColumn.FRIEND_EMAIL
+//                FriendTable.Columns._ID,
+//                FriendTable.Columns.FRIEND_ID,
+//                FriendTable.Columns.FRIEND_USERNAME,
+//                FriendTable.Columns.FRIEND_EMAIL
 //        };
 //
         String sortOrder =
-                FriendTable.FriendColumn.FRIEND_USERNAME + " DESC";
+                FriendTable.Columns.FRIEND_USERNAME + " DESC";
 //
 //        Cursor c = db.query(
-//                FriendTable.FriendColumn.TABLE_NAME,  // The table to query
+//                FriendTable.Columns.TABLE_NAME,  // The table to query
 //                projection,                               // The columns to return
 //                null,                                // The columns for the WHERE clause
 //                null,                            // The values for the WHERE clause
@@ -107,9 +107,9 @@ public class FriendDAO {
         SQLiteDatabase db = mialloDatabaseHelper.getReadableDatabase();
 
         String sortOrder =
-                FriendTable.FriendColumn.FRIEND_USERNAME + " DESC";
+                FriendTable.Columns.FRIEND_USERNAME + " DESC";
 
-        String selection = FriendTable.FriendColumn.FRIEND_ID + " LIKE ?";
+        String selection = FriendTable.Columns.FRIEND_ID + " LIKE ?";
         String[] selectionArgs = {String.valueOf(id)};
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -130,9 +130,9 @@ public class FriendDAO {
         while (c.moveToNext()) {
 
             Friend friend = new Friend();
-            friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID)));
-            friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME)));
-            friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_EMAIL)));
+            friend.setId(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_ID)));
+            friend.setUsername(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_USERNAME)));
+            friend.setEmail(c.getString(c.getColumnIndexOrThrow(FriendTable.Columns.FRIEND_EMAIL)));
 
             friends.add(friend);
         }
