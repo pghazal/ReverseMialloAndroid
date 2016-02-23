@@ -2,7 +2,6 @@ package com.pghazal.reversemiallo.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,22 +12,15 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.pghazal.reversemiallo.R;
 import com.pghazal.reversemiallo.activity.MainActivity;
@@ -57,7 +49,7 @@ public class FriendsFragment extends ListFragment implements
     private ListView mListView;
     private FriendCursorAdapter mAdapter;
     private SwipeRefreshLayout mSwipeContainer;
-    private LinearLayout actionButton;
+    private LinearLayout mActionButton;
 
     private OnActionButtonClickListener mListener;
     private List<Friend> selectedFriends;
@@ -151,8 +143,8 @@ public class FriendsFragment extends ListFragment implements
             }
         });
 
-        actionButton = (LinearLayout) getActivity().findViewById(R.id.actionButton);
-        actionButton.setOnClickListener(this);
+        mActionButton = (LinearLayout) getActivity().findViewById(R.id.actionButton);
+        mActionButton.setOnClickListener(this);
         mListener = (MainActivity) getActivity();
 
         HashMap<String, Integer> mapSelectedFriends = null;
@@ -269,12 +261,12 @@ public class FriendsFragment extends ListFragment implements
                 mSwipeContainer.getWidth(),
                 mSwipeContainer.getHeight(),
                 mSwipeContainer.getWidth(),
-                mSwipeContainer.getHeight() - actionButton.getHeight(),
+                mSwipeContainer.getHeight() - mActionButton.getHeight(),
                 500);
         mSwipeContainer.startAnimation(ra);
 
-        actionButton.setAlpha(0.0f);
-        actionButton.animate()
+        mActionButton.setAlpha(0.0f);
+        mActionButton.animate()
                 .setDuration(500)
                 .alpha(1.0f)
                 .translationY(0)
@@ -282,7 +274,7 @@ public class FriendsFragment extends ListFragment implements
                     @Override
                     public void onAnimationStart(Animator animation) {
                         super.onAnimationStart(animation);
-                        actionButton.setVisibility(View.VISIBLE);
+                        mActionButton.setVisibility(View.VISIBLE);
                     }
                 });
     }
@@ -293,26 +285,29 @@ public class FriendsFragment extends ListFragment implements
                 mSwipeContainer.getWidth(),
                 mSwipeContainer.getHeight(),
                 mSwipeContainer.getWidth(),
-                mSwipeContainer.getHeight() + actionButton.getHeight(),
+                mSwipeContainer.getHeight() + mActionButton.getHeight(),
                 500);
         mSwipeContainer.startAnimation(ra);
 
-        actionButton.setAlpha(1.0f);
-        actionButton.animate()
+        mActionButton.setAlpha(1.0f);
+        mActionButton.animate()
                 .setDuration(500)
                 .alpha(0.0f)
-                .translationY(actionButton.getHeight())
+                .translationY(mActionButton.getHeight())
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
-                        actionButton.setVisibility(View.INVISIBLE);
+                        mActionButton.setVisibility(View.INVISIBLE);
                     }
                 });
     }
 
     @Override
     public void onRefresh() {
+        mListView.setEnabled(false);
+        mActionButton.setEnabled(false);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -333,6 +328,9 @@ public class FriendsFragment extends ListFragment implements
 
                 mAdapter.swapCursor(cursor);
 
+                mListView.setEnabled(true);
+                mActionButton.setEnabled(true);
+
                 mSwipeContainer.setRefreshing(false);
             }
         }, 2000);
@@ -342,9 +340,9 @@ public class FriendsFragment extends ListFragment implements
     public void onItemCheckChangeListener(int position) {
         int countSelected = mAdapter.getItemSelectedCount();
 
-        if (countSelected > 0 && actionButton.getVisibility() == View.INVISIBLE) {
+        if (countSelected > 0 && mActionButton.getVisibility() == View.INVISIBLE) {
             showActionButton();
-        } else if (countSelected <= 0 && actionButton.getVisibility() == View.VISIBLE) {
+        } else if (countSelected <= 0 && mActionButton.getVisibility() == View.VISIBLE) {
             hideActionButton();
         }
     }
