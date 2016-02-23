@@ -26,8 +26,9 @@ import java.util.List;
 public class FriendCursorAdapter extends SimpleCursorAdapter {
 
     public interface OnItemCheckChangeListener {
-        public void onItemCheckChangeListener(int position);
-        public void setSelectedFriends(List<Friend> friends);
+        void onItemCheckChangeListener(int position);
+
+        void setSelectedFriends(List<Friend> friends);
     }
 
     private static final String TAG = "FriendCursorAdapter";
@@ -59,7 +60,7 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
         final int position = cursor.getPosition();
 
         final String id = cursor.getString(
-                cursor.getColumnIndexOrThrow(FriendTable.FriendColumn._ID));
+                cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_ID));
         String username = cursor.getString(
                 cursor.getColumnIndexOrThrow(FriendTable.FriendColumn.FRIEND_USERNAME));
         String email = cursor.getString(
@@ -185,7 +186,6 @@ public class FriendCursorAdapter extends SimpleCursorAdapter {
 
     public class GetSelectedFriendsAsyncTask extends AsyncTask<Void, Void, List<Friend>> {
         public GetSelectedFriendsAsyncTask() {
-
         }
 
         @Override

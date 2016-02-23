@@ -9,8 +9,8 @@
 
     <string name="take_the_picture">Take the picture</string>
 
-    <string name="title_activity_add_friend">AddFriendActivity</string>
-    <string name="action_add_friend">Add Friend</string>
+    <string name="title_activity_add_friend">Look for friends</string>
+    <string name="action_add_friend">Add friend</string>
 
     <string name="title_activity_settings">Settings</string>
 </resources>

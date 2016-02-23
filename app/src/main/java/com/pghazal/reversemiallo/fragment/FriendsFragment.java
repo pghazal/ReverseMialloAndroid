@@ -95,6 +95,8 @@ public class FriendsFragment extends ListFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "#onCreateView");
+
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
@@ -256,6 +258,7 @@ public class FriendsFragment extends ListFragment implements
     }
 
     private void showActionButton() {
+        Log.d(TAG, "# showActionButton");
         ResizeAnimation ra = new ResizeAnimation(
                 mSwipeContainer,
                 mSwipeContainer.getWidth(),
@@ -280,6 +283,8 @@ public class FriendsFragment extends ListFragment implements
     }
 
     private void hideActionButton() {
+        Log.d(TAG, "# hideActionButton");
+
         ResizeAnimation ra = new ResizeAnimation(
                 mSwipeContainer,
                 mSwipeContainer.getWidth(),
@@ -305,6 +310,8 @@ public class FriendsFragment extends ListFragment implements
 
     @Override
     public void onRefresh() {
+        Log.d(TAG, "# onRefresh");
+
         mListView.setEnabled(false);
         mActionButton.setEnabled(false);
 
@@ -361,6 +368,8 @@ public class FriendsFragment extends ListFragment implements
 
     @Override
     public void onClick(View v) {
+        Log.d(TAG, "# onClick");
+
         switch (v.getId()) {
             case R.id.actionButton:
                 FriendCursorAdapter.GetSelectedFriendsAsyncTask task =
