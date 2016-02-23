@@ -21,6 +21,7 @@ import com.pghazal.reversemiallo.entity.Friend;
 import com.pghazal.reversemiallo.fragment.FriendsFragment;
 import com.pghazal.reversemiallo.utility.SessionManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements
@@ -152,5 +153,9 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onActionButtonClick(List<Friend> friends) {
         Log.d(TAG, friends.toString());
+
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putParcelableArrayListExtra("friends", (ArrayList<Friend>) friends);
+        startActivity(intent);
     }
 }

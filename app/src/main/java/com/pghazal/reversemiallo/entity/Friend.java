@@ -1,9 +1,12 @@
 package com.pghazal.reversemiallo.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.pghazal.reversemiallo.database.table.FriendTable;
 
-public class Friend {
+public class Friend implements Parcelable {
 
     @SerializedName(value = FriendTable.FriendColumn.FRIEND_ID)
     private String id;
@@ -81,4 +84,39 @@ public class Friend {
     public String toString() {
         return getId() + " " + getUsername() + " " + getEmail();
     }
+
+    public Friend(Parcel in) {
+        super();
+        this.id = in.readString();
+        this.username = in.readString();
+        this.email = in.readString();
+        this.createdAt = in.readString();
+        this.updatedAt = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(username);
+        dest.writeString(email);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+    }
+
+    public static final Parcelable.Creator<Friend> CREATOR = new Parcelable.Creator<Friend>() {
+        @Override
+        public Friend createFromParcel(Parcel source) {
+            return new Friend(source);
+        }
+
+        @Override
+        public Friend[] newArray(int size) {
+            return new Friend[size];
+        }
+    };
 }
